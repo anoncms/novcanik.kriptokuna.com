@@ -46241,14 +46241,24 @@ console.log(seed);
 console.log(signer);
 console.log(provider);
 console.log(_wavesTransactions.libs.crypto.address(seed));
-(0, _jquery.default)("#backFromReceive").on("click", function () {
-  (0, _jquery.default)("#screen-receive").fadeToggle(function () {
-    (0, _jquery.default)("#screen-home").fadeToggle();
+(0, _jquery.default)("#receive").on("click", function () {
+  (0, _jquery.default)("#screen-home").fadeOut(function () {
+    (0, _jquery.default)("#screen-receive").fadeIn();
   });
 });
-(0, _jquery.default)("#receive").on("click", function () {
-  (0, _jquery.default)("#screen-home").fadeToggle(function () {
-    (0, _jquery.default)("#screen-receive").fadeToggle();
+(0, _jquery.default)("#backFromReceive").on("click", function () {
+  (0, _jquery.default)("#screen-receive").fadeOut(function () {
+    (0, _jquery.default)("#screen-home").fadeIn();
+  });
+});
+(0, _jquery.default)("#send").on("click", function () {
+  (0, _jquery.default)("#screen-home").fadeOut(function () {
+    (0, _jquery.default)("#screen-send").fadeIn();
+  });
+});
+(0, _jquery.default)("#backFromSend").on("click", function () {
+  (0, _jquery.default)("#screen-send").fadeOut(function () {
+    (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
 },{"@waves/signer":"node_modules/@waves/signer/cjs/Signer.js","@waves/provider-seed":"node_modules/@waves/provider-seed/dist/provider-seed.js","@waves/waves-transactions":"node_modules/@waves/waves-transactions/dist/index.js","jquery":"node_modules/jquery/dist/jquery.js"}],"../../.local/node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

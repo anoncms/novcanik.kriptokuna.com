@@ -10,14 +10,24 @@ console.log(seed);
 console.log(signer);
 console.log(provider);
 console.log(libs.crypto.address(seed));
-$("#backFromReceive").on("click", function () {
-    $("#screen-receive").fadeToggle(function () {
-        $("#screen-home").fadeToggle();
+$("#receive").on("click", function () {
+    $("#screen-home").fadeOut(function () {
+        $("#screen-receive").fadeIn();
     });
 });
-$("#receive").on("click", function () {
-    $("#screen-home").fadeToggle(function () {
-        $("#screen-receive").fadeToggle();
+$("#backFromReceive").on("click", function () {
+    $("#screen-receive").fadeOut(function () {
+        $("#screen-home").fadeIn();
+    });
+});
+$("#send").on("click", function () {
+    $("#screen-home").fadeOut(function () {
+        $("#screen-send").fadeIn();
+    });
+});
+$("#backFromSend").on("click", function () {
+    $("#screen-send").fadeOut(function () {
+        $("#screen-home").fadeIn();
     });
 });
 //# sourceMappingURL=wallet.js.map
