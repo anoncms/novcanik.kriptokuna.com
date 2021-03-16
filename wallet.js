@@ -30,4 +30,14 @@ $("#backFromSend").on("click", function () {
         $("#screen-home").fadeIn();
     });
 });
+$("#cards").on("click", function () {
+    $("#screen-home").fadeOut(function () {
+        $("#screen-cards").fadeIn();
+    });
+});
+$("#backFromCards").on("click", function () {
+    $("#screen-cards").fadeOut(function () {
+        $("#screen-home").fadeIn();
+    });
+});
 //# sourceMappingURL=wallet.js.map
