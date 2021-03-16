@@ -2,5 +2,14 @@
     width: 100%;
 }
 
+.main-icon {
+    font-size: 400%;
+}
+
+@media (min-width: 768px) {
+    .main-icon {
+        font-size: 500%;
+    }
+}
 
 /*# sourceMappingURL=/custom.59417457.css.map */
