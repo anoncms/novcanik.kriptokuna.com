@@ -46241,42 +46241,58 @@ console.log(seed);
 console.log(signer);
 console.log(provider);
 console.log(_wavesTransactions.libs.crypto.address(seed));
+var activeScreen = "home";
 (0, _jquery.default)("#receive").on("click", function () {
+  activeScreen = "receive";
   (0, _jquery.default)("#screen-home").fadeOut(function () {
     (0, _jquery.default)("#screen-receive").fadeIn();
   });
 });
 (0, _jquery.default)("#backFromReceive").on("click", function () {
+  activeScreen = "home";
   (0, _jquery.default)("#screen-receive").fadeOut(function () {
     (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
 (0, _jquery.default)("#send").on("click", function () {
+  activeScreen = "send";
   (0, _jquery.default)("#screen-home").fadeOut(function () {
     (0, _jquery.default)("#screen-send").fadeIn();
   });
 });
 (0, _jquery.default)("#backFromSend").on("click", function () {
+  activeScreen = "home";
   (0, _jquery.default)("#screen-send").fadeOut(function () {
     (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
 (0, _jquery.default)("#cards").on("click", function () {
+  activeScreen = "cards";
   (0, _jquery.default)("#screen-home").fadeOut(function () {
     (0, _jquery.default)("#screen-cards").fadeIn();
   });
 });
 (0, _jquery.default)("#backFromCards").on("click", function () {
+  activeScreen = "home";
   (0, _jquery.default)("#screen-cards").fadeOut(function () {
     (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
 (0, _jquery.default)("#settings").on("click", function () {
-  (0, _jquery.default)("#screen-home").fadeOut(function () {
-    (0, _jquery.default)("#screen-settings").fadeIn();
-  });
+  if (activeScreen != "home") {
+    (0, _jquery.default)("#screen-" + activeScreen).fadeOut(function () {
+      (0, _jquery.default)("#screen-settings").fadeIn();
+      activeScreen = "settings";
+    });
+  } else {
+    activeScreen = "settings";
+    (0, _jquery.default)("#screen-home").fadeOut(function () {
+      (0, _jquery.default)("#screen-settings").fadeIn();
+    });
+  }
 });
 (0, _jquery.default)("#backFromSettings").on("click", function () {
+  activeScreen = "home";
   (0, _jquery.default)("#screen-settings").fadeOut(function () {
     (0, _jquery.default)("#screen-home").fadeIn();
   });
