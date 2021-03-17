@@ -46282,7 +46282,9 @@ console.log(_wavesTransactions.libs.crypto.address(seed));
   });
 });
 document.addEventListener('DOMContentLoaded', function (event) {
-  (0, _jquery.default)("#main-page").fadeIn();
+  (0, _jquery.default)("#loading-page").fadeOut(function () {
+    (0, _jquery.default)("#main-page").fadeIn();
+  });
 });
 },{"@waves/signer":"node_modules/@waves/signer/cjs/Signer.js","@waves/provider-seed":"node_modules/@waves/provider-seed/dist/provider-seed.js","@waves/waves-transactions":"node_modules/@waves/waves-transactions/dist/index.js","jquery":"node_modules/jquery/dist/jquery.js"}],"../../.local/node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

@@ -51,6 +51,8 @@ $("#backFromSettings").on("click", function () {
     });
 });
 document.addEventListener('DOMContentLoaded', (event) => {
-    $("#main-page").fadeIn();
+    $("#loading-page").fadeOut(function () {
+        $("#main-page").fadeIn();
+    });
 });
 //# sourceMappingURL=wallet.js.map
