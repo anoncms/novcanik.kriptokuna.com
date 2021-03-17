@@ -12,4 +12,12 @@
     }
 }
 
+.modal-header {
+    border-bottom: 0 none;
+}
+
+.modal-footer {
+    border-top: 0 none;
+}
+
 /*# sourceMappingURL=/custom.59417457.css.map */
