@@ -50,4 +50,7 @@ $("#backFromSettings").on("click", function () {
         $("#screen-home").fadeIn();
     });
 });
+document.addEventListener('DOMContentLoaded', (event) => {
+    $("#main-page").fadeIn();
+});
 //# sourceMappingURL=wallet.js.map
