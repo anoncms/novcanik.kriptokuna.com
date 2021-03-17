@@ -1,15 +1,4 @@
-import { Signer } from '@waves/signer';
-import { ProviderSeed } from '@waves/provider-seed';
-import { libs } from '@waves/waves-transactions';
 import $ from "jquery";
-const seed = "admit drink family great deposit fade exhibit taste piece tomato because fall invest donor opera";
-const signer = new Signer();
-const provider = new ProviderSeed(seed);
-signer.setProvider(provider);
-console.log(seed);
-console.log(signer);
-console.log(provider);
-console.log(libs.crypto.address(seed));
 var activeScreen = "home";
 $("#receive").on("click", function () {
     activeScreen = "receive";
@@ -68,8 +57,12 @@ $("#backFromSettings").on("click", function () {
     });
 });
 document.addEventListener('DOMContentLoaded', (event) => {
-    $("#loading-page").fadeOut(function () {
-        $("#main-page").fadeIn();
+    $("#page-loading").fadeOut(function () {
+        var page = getPage();
+        $("#page-" + page).fadeIn();
     });
 });
+function getPage() {
+    return "main";
+}
 //# sourceMappingURL=wallet.js.map
