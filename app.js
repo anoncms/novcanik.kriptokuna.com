@@ -94,17 +94,20 @@ class Wallet {
         }
     }
     async populateBalance() {
-        var balances = await this.signer.getBalance();
-        balances.forEach(function (asset) {
-            if (asset.assetId == AHRK) {
-                var balance = asset.amount / AHRKDEC;
-                balance = Math.round(balance * 100) / 100;
-                $("#balance").html(String(balance.toFixed(2)));
-            }
-        });
-        setTimeout(function () {
-            wallet.populateBalance();
-        }, 1000);
+        try {
+            var balances = await this.signer.getBalance();
+            balances.forEach(function (asset) {
+                if (asset.assetId == AHRK) {
+                    var balance = asset.amount / AHRKDEC;
+                    balance = Math.round(balance * 100) / 100;
+                    $("#balance").html(String(balance.toFixed(2)));
+                }
+            });
+            setTimeout(function () {
+                wallet.populateBalance();
+            }, 1000);
+        }
+        catch (e) { }
     }
     async initWaves(seed) {
         this.signer = new Signer();
@@ -182,6 +185,7 @@ var wallet = new Wallet();
 var activeScreen = "home";
 const AHRK = "Gvs59WEEXVAQiRZwisUosG7fVNr8vnzS8mjkgqotrERT";
 const AHRKDEC = 1000000;
+var page = wallet.getPage();
 // Button bindings
 $("#receive").on("click", function () {
     activeScreen = "receive";
@@ -265,7 +269,6 @@ $("#buttonLogout").on("click", function () {
     wallet.logout();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
-    var page = wallet.getPage();
     $("#page-loading").fadeOut(function () {
         $("#page-" + page).fadeIn();
     });
