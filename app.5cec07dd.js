@@ -50781,6 +50781,10 @@ function () {
                 return this.initWaves(seed);
 
               case 6:
+                _context7.next = 8;
+                return wallet.populateBalance();
+
+              case 8:
                 setInterval(
                 /*#__PURE__*/
                 _asyncToGenerator(
@@ -50808,9 +50812,9 @@ function () {
                       }
                     }
                   }, _callee6, null, [[0, 5]]);
-                })), 1000);
+                })), 30000);
 
-              case 7:
+              case 9:
               case "end":
                 return _context7.stop();
             }

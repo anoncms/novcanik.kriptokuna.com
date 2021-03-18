@@ -139,12 +139,13 @@ class Wallet {
             var seed = this.decryptSeedSession();
             await this.initWaves(seed);
         }
+        await wallet.populateBalance();
         setInterval(async function () {
             try {
                 await wallet.populateBalance();
             }
             catch (e) { }
-        }, 1000);
+        }, 30000);
     }
     accountExists() {
         if (this.seed) {
