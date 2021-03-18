@@ -12036,6 +12036,16 @@ var activeScreen = "home";
     (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
+(0, _jquery.default)("#buttonShowExisting").on("click", function () {
+  (0, _jquery.default)("#newAccount").fadeOut(function () {
+    (0, _jquery.default)("#existingAccount").fadeIn();
+  });
+});
+(0, _jquery.default)("#buttonNewAccount").on("click", function () {
+  (0, _jquery.default)("#existingAccount").fadeOut(function () {
+    (0, _jquery.default)("#newAccount").fadeIn();
+  });
+});
 document.addEventListener('DOMContentLoaded', function (event) {
   (0, _jquery.default)("#page-loading").fadeOut(function () {
     var page = getPage();
@@ -12045,7 +12055,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 function getPage() {
   // return "main";
-  return "login";
+  return "newaccount";
 }
 },{"jquery":"node_modules/jquery/dist/jquery.js","regenerator-runtime/runtime.js":"node_modules/regenerator-runtime/runtime.js","wallet":"node_modules/wallet/index.js"}],"../../.local/node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
