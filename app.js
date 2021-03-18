@@ -25,6 +25,45 @@ class Wallet {
             }
         }
     }
+    async login() {
+        var p = $("#password1").val();
+        if (p) {
+            try {
+                var seed = libs.crypto.decryptSeed(this.seed, String(p));
+                var signer = new Signer();
+                var provider = new ProviderSeed(seed);
+                signer.setProvider(provider);
+                var user = await signer.login();
+                if (this.address == user.address) {
+                    await this.initWaves(seed);
+                    var d = new Date();
+                    d.setHours(d.getHours() + 1);
+                    this.sessionSeed = libs.crypto.encryptSeed(String(seed), this.address);
+                    Cookies.set("sessionSeed", this.sessionSeed, { expires: d });
+                    this.populateData();
+                    this.showHomeAfterLogin();
+                }
+                else {
+                    $("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
+                    $("#pMessage3").fadeIn();
+                }
+            }
+            catch (e) {
+                $("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
+                $("#pMessage3").fadeIn();
+            }
+        }
+        else
+            ($("#pMessage3").html("Lozinka je obavezna."));
+        $("#pMessage3").fadeIn();
+    }
+    logout() {
+        this.sessionSeed = null;
+        Cookies.remove("sessionSeed");
+        $("#page-main").fadeOut(function () {
+            $("#page-login").fadeIn();
+        });
+    }
     async register() {
         if (passwordsEqual("password2", "password3", "pMessage1")) {
             var seed = libs.crypto.randomSeed();
@@ -84,7 +123,9 @@ class Wallet {
     setCookies() {
         Cookies.set("address", this.address, { expires: 365 * 24 * 10 });
         Cookies.set("seed", this.seed, { expires: 365 * 24 * 10 });
-        Cookies.set("sessionSeed", this.sessionSeed, { expires: 365 * 24 * 10 });
+        var d = new Date();
+        d.setHours(d.getHours() + 1);
+        Cookies.set("sessionSeed", this.sessionSeed, { expires: d });
     }
     async populateData() {
         $("#address").val(this.address);
@@ -122,6 +163,12 @@ class Wallet {
     showHomeAfterRegister() {
         activeScreen = "home";
         $("#page-newaccount").fadeOut(function () {
+            $("#page-main").fadeIn();
+        });
+    }
+    showHomeAfterLogin() {
+        activeScreen = "home";
+        $("#page-login").fadeOut(function () {
             $("#page-main").fadeIn();
         });
     }
@@ -202,6 +249,15 @@ $("#buttonRegister").on("click", function () {
 });
 $("#buttonImport").on("click", function () {
     wallet.import();
+});
+$("#buttonLogin").on("click", function () {
+    wallet.login();
+});
+$("#loginForm").on("submit", function () {
+    wallet.login();
+});
+$("#buttonLogout").on("click", function () {
+    wallet.logout();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
     $("#page-loading").fadeOut(function () {
