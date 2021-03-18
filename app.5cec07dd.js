@@ -50396,7 +50396,163 @@ var define;
 	return init(function () {});
 }));
 
-},{}],"src/app.ts":[function(require,module,exports) {
+},{}],"node_modules/toggle-selection/index.js":[function(require,module,exports) {
+
+module.exports = function () {
+  var selection = document.getSelection();
+  if (!selection.rangeCount) {
+    return function () {};
+  }
+  var active = document.activeElement;
+
+  var ranges = [];
+  for (var i = 0; i < selection.rangeCount; i++) {
+    ranges.push(selection.getRangeAt(i));
+  }
+
+  switch (active.tagName.toUpperCase()) { // .toUpperCase handles XHTML
+    case 'INPUT':
+    case 'TEXTAREA':
+      active.blur();
+      break;
+
+    default:
+      active = null;
+      break;
+  }
+
+  selection.removeAllRanges();
+  return function () {
+    selection.type === 'Caret' &&
+    selection.removeAllRanges();
+
+    if (!selection.rangeCount) {
+      ranges.forEach(function(range) {
+        selection.addRange(range);
+      });
+    }
+
+    active &&
+    active.focus();
+  };
+};
+
+},{}],"node_modules/copy-to-clipboard/index.js":[function(require,module,exports) {
+"use strict";
+
+var deselectCurrent = require("toggle-selection");
+
+var clipboardToIE11Formatting = {
+  "text/plain": "Text",
+  "text/html": "Url",
+  "default": "Text"
+}
+
+var defaultMessage = "Copy to clipboard: #{key}, Enter";
+
+function format(message) {
+  var copyKey = (/mac os x/i.test(navigator.userAgent) ? "⌘" : "Ctrl") + "+C";
+  return message.replace(/#{\s*key\s*}/g, copyKey);
+}
+
+function copy(text, options) {
+  var debug,
+    message,
+    reselectPrevious,
+    range,
+    selection,
+    mark,
+    success = false;
+  if (!options) {
+    options = {};
+  }
+  debug = options.debug || false;
+  try {
+    reselectPrevious = deselectCurrent();
+
+    range = document.createRange();
+    selection = document.getSelection();
+
+    mark = document.createElement("span");
+    mark.textContent = text;
+    // reset user styles for span element
+    mark.style.all = "unset";
+    // prevents scrolling to the end of the page
+    mark.style.position = "fixed";
+    mark.style.top = 0;
+    mark.style.clip = "rect(0, 0, 0, 0)";
+    // used to preserve spaces and line breaks
+    mark.style.whiteSpace = "pre";
+    // do not inherit user-select (it may be `none`)
+    mark.style.webkitUserSelect = "text";
+    mark.style.MozUserSelect = "text";
+    mark.style.msUserSelect = "text";
+    mark.style.userSelect = "text";
+    mark.addEventListener("copy", function(e) {
+      e.stopPropagation();
+      if (options.format) {
+        e.preventDefault();
+        if (typeof e.clipboardData === "undefined") { // IE 11
+          debug && console.warn("unable to use e.clipboardData");
+          debug && console.warn("trying IE specific stuff");
+          window.clipboardData.clearData();
+          var format = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"]
+          window.clipboardData.setData(format, text);
+        } else { // all other browsers
+          e.clipboardData.clearData();
+          e.clipboardData.setData(options.format, text);
+        }
+      }
+      if (options.onCopy) {
+        e.preventDefault();
+        options.onCopy(e.clipboardData);
+      }
+    });
+
+    document.body.appendChild(mark);
+
+    range.selectNodeContents(mark);
+    selection.addRange(range);
+
+    var successful = document.execCommand("copy");
+    if (!successful) {
+      throw new Error("copy command was unsuccessful");
+    }
+    success = true;
+  } catch (err) {
+    debug && console.error("unable to copy using execCommand: ", err);
+    debug && console.warn("trying IE specific stuff");
+    try {
+      window.clipboardData.setData(options.format || "text", text);
+      options.onCopy && options.onCopy(window.clipboardData);
+      success = true;
+    } catch (err) {
+      debug && console.error("unable to copy using clipboardData: ", err);
+      debug && console.error("falling back to prompt");
+      message = format("message" in options ? options.message : defaultMessage);
+      window.prompt(message, text);
+    }
+  } finally {
+    if (selection) {
+      if (typeof selection.removeRange == "function") {
+        selection.removeRange(range);
+      } else {
+        selection.removeAllRanges();
+      }
+    }
+
+    if (mark) {
+      document.body.removeChild(mark);
+    }
+    reselectPrevious();
+  }
+
+  return success;
+}
+
+module.exports = copy;
+
+},{"toggle-selection":"node_modules/toggle-selection/index.js"}],"src/app.ts":[function(require,module,exports) {
 "use strict";
 
 var _signer = require("@waves/signer");
@@ -50411,6 +50567,8 @@ require("regenerator-runtime/runtime.js");
 
 var _jsCookie = _interopRequireDefault(require("js-cookie"));
 
+var _copyToClipboard = _interopRequireDefault(require("copy-to-clipboard"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -50422,11 +50580,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-window.onerror = function (message, url, lineNumber) {
-  // code to execute on an error  
-  return true; // prevents browser error messages  
-};
 
 var QRCode = require('qrcode');
 
@@ -50967,6 +51120,15 @@ var page = wallet.getPage(); // Button bindings
 (0, _jquery.default)("#buttonLogout").on("click", function () {
   wallet.logout();
 });
+(0, _jquery.default)("#buttonCopy").on("click", function () {
+  var address = (0, _jquery.default)("#address").val();
+  (0, _copyToClipboard.default)(String(address));
+  (0, _jquery.default)("#pMessage4").fadeIn(function () {
+    setTimeout(function () {
+      (0, _jquery.default)("#pMessage4").fadeOut();
+    }, 500);
+  });
+});
 document.addEventListener('DOMContentLoaded', function (event) {
   (0, _jquery.default)("#page-loading").fadeOut(function () {
     (0, _jquery.default)("#page-" + page).fadeIn();
@@ -50991,7 +51153,7 @@ function passwordsEqual(p1id, p2id, mid) {
     return false;
   }
 }
-},{"@waves/signer":"node_modules/@waves/signer/cjs/Signer.js","@waves/waves-transactions":"node_modules/@waves/waves-transactions/dist/index.js","@waves/provider-seed":"node_modules/@waves/provider-seed/dist/provider-seed.js","qrcode":"node_modules/qrcode/lib/browser.js","jquery":"node_modules/jquery/dist/jquery.js","regenerator-runtime/runtime.js":"node_modules/regenerator-runtime/runtime.js","js-cookie":"node_modules/js-cookie/src/js.cookie.js"}],"../../.local/node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"@waves/signer":"node_modules/@waves/signer/cjs/Signer.js","@waves/waves-transactions":"node_modules/@waves/waves-transactions/dist/index.js","@waves/provider-seed":"node_modules/@waves/provider-seed/dist/provider-seed.js","qrcode":"node_modules/qrcode/lib/browser.js","jquery":"node_modules/jquery/dist/jquery.js","regenerator-runtime/runtime.js":"node_modules/regenerator-runtime/runtime.js","js-cookie":"node_modules/js-cookie/src/js.cookie.js","copy-to-clipboard":"node_modules/copy-to-clipboard/index.js"}],"../../.local/node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -51019,7 +51181,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41251" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36993" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

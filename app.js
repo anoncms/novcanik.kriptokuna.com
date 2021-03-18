@@ -1,7 +1,3 @@
-window.onerror = function (message, url, lineNumber) {
-    // code to execute on an error  
-    return true; // prevents browser error messages  
-};
 import { Signer } from '@waves/signer';
 import { libs } from '@waves/waves-transactions';
 import { ProviderSeed } from '@waves/provider-seed';
@@ -9,6 +5,7 @@ var QRCode = require('qrcode');
 import $ from "jquery";
 import "regenerator-runtime/runtime.js";
 import Cookies from "js-cookie";
+import copy from 'copy-to-clipboard';
 class Wallet {
     constructor() {
         this.address = Cookies.get("address");
@@ -274,6 +271,15 @@ $("#loginForm").on("submit", function () {
 });
 $("#buttonLogout").on("click", function () {
     wallet.logout();
+});
+$("#buttonCopy").on("click", function () {
+    var address = $("#address").val();
+    copy(String(address));
+    $("#pMessage4").fadeIn(function () {
+        setTimeout(function () {
+            $("#pMessage4").fadeOut();
+        }, 500);
+    });
 });
 document.addEventListener('DOMContentLoaded', (event) => {
     $("#page-loading").fadeOut(function () {
