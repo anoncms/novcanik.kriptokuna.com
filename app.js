@@ -95,7 +95,7 @@ class Wallet {
     }
     async populateBalance() {
         try {
-            var balances = await this.signer.getBalance();
+            const balances = await this.signer.getBalance();
             balances.forEach(function (asset) {
                 if (asset.assetId == AHRK) {
                     var balance = asset.amount / AHRKDEC;
