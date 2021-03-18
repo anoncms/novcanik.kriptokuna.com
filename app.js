@@ -53,6 +53,19 @@ class Wallet {
             }
         }
     }
+    async populateBalance() {
+        var balances = await this.signer.getBalance();
+        balances.forEach(function (asset) {
+            if (asset.assetId == AHRK) {
+                var balance = asset.amount / AHRKDEC;
+                balance = Math.round(balance * 100) / 100;
+                $("#balance").html(String(balance));
+            }
+        });
+        setTimeout(function () {
+            wallet.populateBalance();
+        }, 1000);
+    }
     async initWaves(seed) {
         this.signer = new Signer();
         this.provider = new ProviderSeed(seed);
@@ -69,9 +82,9 @@ class Wallet {
         return seed;
     }
     setCookies() {
-        Cookies.set("address", this.address);
-        Cookies.set("seed", this.seed);
-        Cookies.set("sessionSeed", this.sessionSeed);
+        Cookies.set("address", this.address, { expires: 365 * 24 * 10 });
+        Cookies.set("seed", this.seed, { expires: 365 * 24 * 10 });
+        Cookies.set("sessionSeed", this.sessionSeed, { expires: 365 * 24 * 10 });
     }
     async populateData() {
         $("#address").val(this.address);
@@ -81,16 +94,6 @@ class Wallet {
             await this.initWaves(seed);
         }
         this.populateBalance();
-    }
-    async populateBalance() {
-        var balances = await this.signer.getBalance();
-        balances.forEach(function (asset) {
-            if (asset.assetId == AHRK) {
-                var balance = asset.amount / AHRKDEC;
-                balance = Math.round(balance * 100) / 100;
-                $("#balance").html(String(balance));
-            }
-        });
     }
     accountExists() {
         if (this.seed) {

@@ -50545,31 +50545,72 @@ function () {
       return _import;
     }()
   }, {
-    key: "initWaves",
+    key: "populateBalance",
     value: function () {
-      var _initWaves = _asyncToGenerator(
+      var _populateBalance = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(seed) {
+      regeneratorRuntime.mark(function _callee3() {
+        var balances;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                this.signer = new _signer.Signer();
-                this.provider = new _providerSeed.ProviderSeed(seed);
-                this.signer.setProvider(this.provider);
-                _context3.next = 5;
-                return this.signer.login();
+                _context3.next = 2;
+                return this.signer.getBalance();
+
+              case 2:
+                balances = _context3.sent;
+                balances.forEach(function (asset) {
+                  if (asset.assetId == AHRK) {
+                    var balance = asset.amount / AHRKDEC;
+                    balance = Math.round(balance * 100) / 100;
+                    (0, _jquery.default)("#balance").html(String(balance));
+                  }
+                });
+                setTimeout(function () {
+                  wallet.populateBalance();
+                }, 1000);
 
               case 5:
-                this.user = _context3.sent;
-                this.address = this.user.address;
-
-              case 7:
               case "end":
                 return _context3.stop();
             }
           }
         }, _callee3, this);
+      }));
+
+      function populateBalance() {
+        return _populateBalance.apply(this, arguments);
+      }
+
+      return populateBalance;
+    }()
+  }, {
+    key: "initWaves",
+    value: function () {
+      var _initWaves = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee4(seed) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                this.signer = new _signer.Signer();
+                this.provider = new _providerSeed.ProviderSeed(seed);
+                this.signer.setProvider(this.provider);
+                _context4.next = 5;
+                return this.signer.login();
+
+              case 5:
+                this.user = _context4.sent;
+                this.address = this.user.address;
+
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
       }));
 
       function initWaves(_x) {
@@ -50594,33 +50635,39 @@ function () {
   }, {
     key: "setCookies",
     value: function setCookies() {
-      _jsCookie.default.set("address", this.address);
+      _jsCookie.default.set("address", this.address, {
+        expires: 365 * 24 * 10
+      });
 
-      _jsCookie.default.set("seed", this.seed);
+      _jsCookie.default.set("seed", this.seed, {
+        expires: 365 * 24 * 10
+      });
 
-      _jsCookie.default.set("sessionSeed", this.sessionSeed);
+      _jsCookie.default.set("sessionSeed", this.sessionSeed, {
+        expires: 365 * 24 * 10
+      });
     }
   }, {
     key: "populateData",
     value: function () {
       var _populateData = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4() {
+      regeneratorRuntime.mark(function _callee5() {
         var seed;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 (0, _jquery.default)("#address").val(this.address);
                 this.generateQR();
 
                 if (this.signer) {
-                  _context4.next = 6;
+                  _context5.next = 6;
                   break;
                 }
 
                 seed = this.decryptSeedSession();
-                _context4.next = 6;
+                _context5.next = 6;
                 return this.initWaves(seed);
 
               case 6:
@@ -50628,10 +50675,10 @@ function () {
 
               case 7:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
 
       function populateData() {
@@ -50639,44 +50686,6 @@ function () {
       }
 
       return populateData;
-    }()
-  }, {
-    key: "populateBalance",
-    value: function () {
-      var _populateBalance = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5() {
-        var balances;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return this.signer.getBalance();
-
-              case 2:
-                balances = _context5.sent;
-                balances.forEach(function (asset) {
-                  if (asset.assetId == AHRK) {
-                    var balance = asset.amount / AHRKDEC;
-                    balance = Math.round(balance * 100) / 100;
-                    (0, _jquery.default)("#balance").html(String(balance));
-                  }
-                });
-
-              case 4:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-
-      function populateBalance() {
-        return _populateBalance.apply(this, arguments);
-      }
-
-      return populateBalance;
     }()
   }, {
     key: "accountExists",
