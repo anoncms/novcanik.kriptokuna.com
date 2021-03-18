@@ -50516,13 +50516,11 @@ function () {
                 (0, _jquery.default)("#pMessage3").fadeIn();
 
               case 29:
-                _context.next = 32;
+                _context.next = 33;
                 break;
 
               case 31:
                 (0, _jquery.default)("#pMessage3").html("Lozinka je obavezna.");
-
-              case 32:
                 (0, _jquery.default)("#pMessage3").fadeIn();
 
               case 33:
@@ -50774,9 +50772,10 @@ function () {
                 return this.initWaves(seed);
 
               case 6:
-                this.populateBalance();
+                _context6.next = 8;
+                return this.populateBalance();
 
-              case 7:
+              case 8:
               case "end":
                 return _context6.stop();
             }
@@ -50929,8 +50928,8 @@ var AHRKDEC = 1000000; // Button bindings
   wallet.logout();
 });
 document.addEventListener('DOMContentLoaded', function (event) {
+  var page = wallet.getPage();
   (0, _jquery.default)("#page-loading").fadeOut(function () {
-    var page = wallet.getPage();
     (0, _jquery.default)("#page-" + page).fadeIn();
   });
 }); // Helper functions
@@ -50981,7 +50980,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36763" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41251" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

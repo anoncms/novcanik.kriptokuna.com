@@ -53,9 +53,10 @@ class Wallet {
                 $("#pMessage3").fadeIn();
             }
         }
-        else
-            ($("#pMessage3").html("Lozinka je obavezna."));
-        $("#pMessage3").fadeIn();
+        else {
+            $("#pMessage3").html("Lozinka je obavezna.");
+            $("#pMessage3").fadeIn();
+        }
     }
     logout() {
         this.sessionSeed = null;
@@ -134,7 +135,7 @@ class Wallet {
             var seed = this.decryptSeedSession();
             await this.initWaves(seed);
         }
-        this.populateBalance();
+        await this.populateBalance();
     }
     accountExists() {
         if (this.seed) {
@@ -264,8 +265,8 @@ $("#buttonLogout").on("click", function () {
     wallet.logout();
 });
 document.addEventListener('DOMContentLoaded', (event) => {
+    var page = wallet.getPage();
     $("#page-loading").fadeOut(function () {
-        var page = wallet.getPage();
         $("#page-" + page).fadeIn();
     });
 });
