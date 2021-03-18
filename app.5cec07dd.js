@@ -50828,6 +50828,11 @@ function () {
   }, {
     key: "showHomeAfterLogin",
     value: function showHomeAfterLogin() {
+      if (activeScreen != "home") {
+        (0, _jquery.default)("#screen-" + activeScreen).hide();
+        (0, _jquery.default)("#screen-home").show();
+      }
+
       activeScreen = "home";
       (0, _jquery.default)("#page-login").fadeOut(function () {
         (0, _jquery.default)("#page-main").fadeIn();

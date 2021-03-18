@@ -167,6 +167,10 @@ class Wallet {
         });
     }
     showHomeAfterLogin() {
+        if (activeScreen != "home") {
+            $("#screen-" + activeScreen).hide();
+            $("#screen-home").show();
+        }
         activeScreen = "home";
         $("#page-login").fadeOut(function () {
             $("#page-main").fadeIn();
