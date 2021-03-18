@@ -59,7 +59,7 @@ class Wallet {
             if (asset.assetId == AHRK) {
                 var balance = asset.amount / AHRKDEC;
                 balance = Math.round(balance * 100) / 100;
-                $("#balance").html(String(balance));
+                $("#balance").html(String(balance.toFixed(2)));
             }
         });
         setTimeout(function () {

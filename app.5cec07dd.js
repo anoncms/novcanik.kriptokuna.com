@@ -50564,7 +50564,7 @@ function () {
                   if (asset.assetId == AHRK) {
                     var balance = asset.amount / AHRKDEC;
                     balance = Math.round(balance * 100) / 100;
-                    (0, _jquery.default)("#balance").html(String(balance));
+                    (0, _jquery.default)("#balance").html(String(balance.toFixed(2)));
                   }
                 });
                 setTimeout(function () {
