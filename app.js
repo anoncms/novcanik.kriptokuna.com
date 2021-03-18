@@ -1,3 +1,7 @@
+window.onerror = function (message, url, lineNumber) {
+    // code to execute on an error  
+    return true; // prevents browser error messages  
+};
 import { Signer } from '@waves/signer';
 import { libs } from '@waves/waves-transactions';
 import { ProviderSeed } from '@waves/provider-seed';
@@ -94,20 +98,17 @@ class Wallet {
         }
     }
     async populateBalance() {
-        try {
-            const balances = await this.signer.getBalance();
-            balances.forEach(function (asset) {
-                if (asset.assetId == AHRK) {
-                    var balance = asset.amount / AHRKDEC;
-                    balance = Math.round(balance * 100) / 100;
-                    $("#balance").html(String(balance.toFixed(2)));
-                }
-            });
-            setTimeout(function () {
-                wallet.populateBalance();
-            }, 1000);
-        }
-        catch (e) { }
+        const balances = await this.signer.getBalance();
+        balances.forEach(function (asset) {
+            if (asset.assetId == AHRK) {
+                var balance = asset.amount / AHRKDEC;
+                balance = Math.round(balance * 100) / 100;
+                $("#balance").html(String(balance.toFixed(2)));
+            }
+        });
+    }
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
     async initWaves(seed) {
         this.signer = new Signer();
@@ -138,7 +139,12 @@ class Wallet {
             var seed = this.decryptSeedSession();
             await this.initWaves(seed);
         }
-        await this.populateBalance();
+        setInterval(async function () {
+            try {
+                await wallet.populateBalance();
+            }
+            catch (e) { }
+        }, 1000);
     }
     accountExists() {
         if (this.seed) {
@@ -185,7 +191,7 @@ var wallet = new Wallet();
 var activeScreen = "home";
 const AHRK = "Gvs59WEEXVAQiRZwisUosG7fVNr8vnzS8mjkgqotrERT";
 const AHRKDEC = 1000000;
-var page = wallet.getPage();
+const page = wallet.getPage();
 // Button bindings
 $("#receive").on("click", function () {
     activeScreen = "receive";

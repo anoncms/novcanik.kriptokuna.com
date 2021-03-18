@@ -50423,6 +50423,11 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+window.onerror = function (message, url, lineNumber) {
+  // code to execute on an error  
+  return true; // prevents browser error messages  
+};
+
 var QRCode = require('qrcode');
 
 var Wallet =
@@ -50653,11 +50658,10 @@ function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
-                _context4.next = 3;
+                _context4.next = 2;
                 return this.signer.getBalance();
 
-              case 3:
+              case 2:
                 balances = _context4.sent;
                 balances.forEach(function (asset) {
                   if (asset.assetId == AHRK) {
@@ -50666,22 +50670,13 @@ function () {
                     (0, _jquery.default)("#balance").html(String(balance.toFixed(2)));
                   }
                 });
-                setTimeout(function () {
-                  wallet.populateBalance();
-                }, 1000);
-                _context4.next = 10;
-                break;
 
-              case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](0);
-
-              case 10:
+              case 4:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[0, 8]]);
+        }, _callee4, this);
       }));
 
       function populateBalance() {
@@ -50690,6 +50685,13 @@ function () {
 
       return populateBalance;
     }()
+  }, {
+    key: "delay",
+    value: function delay(ms) {
+      return new Promise(function (resolve) {
+        return setTimeout(resolve, ms);
+      });
+    }
   }, {
     key: "initWaves",
     value: function () {
@@ -50760,34 +50762,60 @@ function () {
     value: function () {
       var _populateData = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6() {
+      regeneratorRuntime.mark(function _callee7() {
         var seed;
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 (0, _jquery.default)("#address").val(this.address);
                 this.generateQR();
 
                 if (this.signer) {
-                  _context6.next = 6;
+                  _context7.next = 6;
                   break;
                 }
 
                 seed = this.decryptSeedSession();
-                _context6.next = 6;
+                _context7.next = 6;
                 return this.initWaves(seed);
 
               case 6:
-                _context6.next = 8;
-                return this.populateBalance();
+                setInterval(
+                /*#__PURE__*/
+                _asyncToGenerator(
+                /*#__PURE__*/
+                regeneratorRuntime.mark(function _callee6() {
+                  return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    while (1) {
+                      switch (_context6.prev = _context6.next) {
+                        case 0:
+                          _context6.prev = 0;
+                          _context6.next = 3;
+                          return wallet.populateBalance();
 
-              case 8:
+                        case 3:
+                          _context6.next = 7;
+                          break;
+
+                        case 5:
+                          _context6.prev = 5;
+                          _context6.t0 = _context6["catch"](0);
+
+                        case 7:
+                        case "end":
+                          return _context6.stop();
+                      }
+                    }
+                  }, _callee6, null, [[0, 5]]);
+                })), 1000);
+
+              case 7:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee7, this);
       }));
 
       function populateData() {
