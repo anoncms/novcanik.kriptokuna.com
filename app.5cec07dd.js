@@ -50721,7 +50721,7 @@ function () {
                 pv = _context2.sent;
 
                 if (pv) {
-                  seed = _wavesTransactions.libs.crypto.decryptSeed(this.seed, p);
+                  seed = _wavesTransactions.libs.crypto.decryptSeed(this.seed, String(p));
                   (0, _jquery.default)("#seedWords2").val(seed);
                   (0, _jquery.default)("#buttonSeedCopy").prop('disabled', false);
                 } else {
@@ -51401,7 +51401,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44837" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45115" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
