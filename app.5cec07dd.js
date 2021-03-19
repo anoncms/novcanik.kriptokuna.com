@@ -50707,23 +50707,111 @@ function () {
       });
     }
   }, {
-    key: "register",
+    key: "send",
     value: function () {
-      var _register = _asyncToGenerator(
+      var _send = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2() {
-        var seed, p;
+        var recipient, a, amount;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                recipient = (0, _jquery.default)("#addressRec").val();
+                a = (0, _jquery.default)("#amount").val();
+
+                if (!(a && recipient)) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.prev = 3;
+                amount = +a;
+                _context2.next = 7;
+                return this.signer.transfer({
+                  amount: Math.floor(amount * AHRKDEC),
+                  recipient: recipient,
+                  assetId: AHRK,
+                  feeAssetId: AHRK,
+                  fee: 50000
+                }).broadcast();
+
+              case 7:
+                (0, _jquery.default)("#sendSuccess").fadeIn(function () {
+                  setTimeout(function () {
+                    (0, _jquery.default)("#sendSuccess").fadeOut();
+                    (0, _jquery.default)("#amount").val("");
+                    (0, _jquery.default)("#addressRec").val("");
+                  }, 2000);
+                });
+                _context2.next = 13;
+                break;
+
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](3);
+
+                if (_context2.t0.error == 112) {
+                  (0, _jquery.default)("#sendError").html("Nemate dovoljno novca na računu. Naknada iznosi 5 lipa.");
+                  (0, _jquery.default)("#sendError").fadeIn(function () {
+                    setTimeout(function () {
+                      (0, _jquery.default)("#sendError").fadeOut();
+                    }, 2000);
+                  });
+                } else {
+                  (0, _jquery.default)("#sendError").html("Dogodila se greška. Pokušajte ponovo.");
+                  (0, _jquery.default)("#sendError").fadeIn(function () {
+                    setTimeout(function () {
+                      (0, _jquery.default)("#sendError").fadeOut();
+                    }, 2000);
+                  });
+                  console.log(_context2.t0.message);
+                }
+
+              case 13:
+                _context2.next = 17;
+                break;
+
+              case 15:
+                (0, _jquery.default)("#sendError").html("Oba polja su obavezna");
+                (0, _jquery.default)("#sendError").fadeIn(function () {
+                  setTimeout(function () {
+                    (0, _jquery.default)("#sendError").fadeOut();
+                  }, 2000);
+                });
+
+              case 17:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[3, 10]]);
+      }));
+
+      function send() {
+        return _send.apply(this, arguments);
+      }
+
+      return send;
+    }()
+  }, {
+    key: "register",
+    value: function () {
+      var _register = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee3() {
+        var seed, p;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
                 if (!passwordsEqual("password2", "password3", "pMessage1")) {
-                  _context2.next = 9;
+                  _context3.next = 9;
                   break;
                 }
 
                 seed = _wavesTransactions.libs.crypto.randomSeed();
-                _context2.next = 4;
+                _context3.next = 4;
                 return this.initWaves(seed);
 
               case 4:
@@ -50735,10 +50823,10 @@ function () {
 
               case 9:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
 
       function register() {
@@ -50752,25 +50840,25 @@ function () {
     value: function () {
       var _import2 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3() {
+      regeneratorRuntime.mark(function _callee4() {
         var seed, p;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 if (!passwordsEqual("password4", "password5", "pMessage2")) {
-                  _context3.next = 14;
+                  _context4.next = 14;
                   break;
                 }
 
                 seed = (0, _jquery.default)("#seedWords1").val();
 
                 if (!seed) {
-                  _context3.next = 12;
+                  _context4.next = 12;
                   break;
                 }
 
-                _context3.next = 5;
+                _context4.next = 5;
                 return this.initWaves(seed);
 
               case 5:
@@ -50779,7 +50867,7 @@ function () {
                 this.setCookies();
                 this.populateData();
                 this.showHomeAfterRegister();
-                _context3.next = 14;
+                _context4.next = 14;
                 break;
 
               case 12:
@@ -50788,10 +50876,10 @@ function () {
 
               case 14:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
 
       function _import() {
@@ -50805,17 +50893,17 @@ function () {
     value: function () {
       var _populateBalance = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4() {
+      regeneratorRuntime.mark(function _callee5() {
         var balances;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.next = 2;
+                _context5.next = 2;
                 return this.signer.getBalance();
 
               case 2:
-                balances = _context4.sent;
+                balances = _context5.sent;
                 balances.forEach(function (asset) {
                   if (asset.assetId == AHRK) {
                     var balance = asset.amount / AHRKDEC;
@@ -50826,10 +50914,10 @@ function () {
 
               case 4:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
 
       function populateBalance() {
@@ -50850,27 +50938,27 @@ function () {
     value: function () {
       var _initWaves = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5(seed) {
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      regeneratorRuntime.mark(function _callee6(seed) {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 this.signer = new _signer.Signer();
                 this.provider = new _providerSeed.ProviderSeed(seed);
                 this.signer.setProvider(this.provider);
-                _context5.next = 5;
+                _context6.next = 5;
                 return this.signer.login();
 
               case 5:
-                this.user = _context5.sent;
+                this.user = _context6.sent;
                 this.address = this.user.address;
 
               case 7:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function initWaves(_x) {
@@ -50915,26 +51003,26 @@ function () {
     value: function () {
       var _populateData = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee7() {
+      regeneratorRuntime.mark(function _callee8() {
         var seed;
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 (0, _jquery.default)("#address").val(this.address);
                 this.generateQR();
 
                 if (this.signer) {
-                  _context7.next = 6;
+                  _context8.next = 6;
                   break;
                 }
 
                 seed = this.decryptSeedSession();
-                _context7.next = 6;
+                _context8.next = 6;
                 return this.initWaves(seed);
 
               case 6:
-                _context7.next = 8;
+                _context8.next = 8;
                 return wallet.populateBalance();
 
               case 8:
@@ -50942,37 +51030,37 @@ function () {
                 /*#__PURE__*/
                 _asyncToGenerator(
                 /*#__PURE__*/
-                regeneratorRuntime.mark(function _callee6() {
-                  return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                regeneratorRuntime.mark(function _callee7() {
+                  return regeneratorRuntime.wrap(function _callee7$(_context7) {
                     while (1) {
-                      switch (_context6.prev = _context6.next) {
+                      switch (_context7.prev = _context7.next) {
                         case 0:
-                          _context6.prev = 0;
-                          _context6.next = 3;
+                          _context7.prev = 0;
+                          _context7.next = 3;
                           return wallet.populateBalance();
 
                         case 3:
-                          _context6.next = 7;
+                          _context7.next = 7;
                           break;
 
                         case 5:
-                          _context6.prev = 5;
-                          _context6.t0 = _context6["catch"](0);
+                          _context7.prev = 5;
+                          _context7.t0 = _context7["catch"](0);
 
                         case 7:
                         case "end":
-                          return _context6.stop();
+                          return _context7.stop();
                       }
                     }
-                  }, _callee6, null, [[0, 5]]);
+                  }, _callee7, null, [[0, 5]]);
                 })), 30000);
 
               case 9:
               case "end":
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7, this);
+        }, _callee8, this);
       }));
 
       function populateData() {
@@ -51120,6 +51208,9 @@ var page = wallet.getPage(); // Button bindings
 (0, _jquery.default)("#buttonLogout").on("click", function () {
   wallet.logout();
 });
+(0, _jquery.default)("#buttonSend").on("click", function () {
+  wallet.send();
+});
 (0, _jquery.default)("#buttonCopy").on("click", function () {
   var address = (0, _jquery.default)("#address").val();
   (0, _copyToClipboard.default)(String(address));
@@ -51181,7 +51272,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36993" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40871" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
