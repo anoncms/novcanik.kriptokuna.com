@@ -50542,8 +50542,7 @@ function () {
     }
   }, {
     key: "qrscan",
-    value: function qrscan() {
-      alert("fdsaf");
+    value: function qrscan() {// alert("fdsaf");
     }
   }, {
     key: "showSeed",
@@ -51219,4 +51218,4 @@ function passwordsEqual(p1id, p2id, mid) {
   }
 }
 },{"@waves/signer":"awKw","@waves/waves-transactions":"ET8R","@waves/provider-seed":"AvNi","qrcode":"xCW/","jquery":"juYr","regenerator-runtime/runtime.js":"QVnC","js-cookie":"PhdE","copy-to-clipboard":"xbqV"}]},{},["EVxB"], null)
-//# sourceMappingURL=app.36881eaf.js.map
+//# sourceMappingURL=app.8fe1f46d.js.map
