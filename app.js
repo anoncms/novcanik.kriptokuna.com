@@ -29,13 +29,10 @@ class Wallet {
     async login() {
         var p = $("#password1").val();
         if (p) {
-            try {
-                var seed = libs.crypto.decryptSeed(this.seed, String(p));
-                var signer = new Signer();
-                var provider = new ProviderSeed(seed);
-                signer.setProvider(provider);
-                var user = await signer.login();
-                if (this.address == user.address) {
+            var pv = this.passwordValid(p);
+            if (pv) {
+                try {
+                    var seed = libs.crypto.decryptSeed(this.seed, String(p));
                     await this.initWaves(seed);
                     var d = new Date();
                     d.setHours(d.getHours() + 1);
@@ -44,12 +41,12 @@ class Wallet {
                     this.populateData();
                     this.showHomeAfterLogin();
                 }
-                else {
+                catch (e) {
                     $("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
                     $("#pMessage3").fadeIn();
                 }
             }
-            catch (e) {
+            else {
                 $("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
                 $("#pMessage3").fadeIn();
             }
@@ -65,6 +62,20 @@ class Wallet {
         $("#page-main").fadeOut(function () {
             $("#page-login").fadeIn();
         });
+    }
+    qrscan() {
+    }
+    async showSeed() {
+        var p = $("#password8").val();
+        var pv = await this.passwordValid(p);
+        if (pv) {
+            var seed = libs.crypto.decryptSeed(this.seed, p);
+            $("#seedWords2").val(seed);
+            $("#buttonSeedCopy").prop('disabled', false);
+        }
+        else {
+            alert("wrong");
+        }
     }
     async send() {
         var recipient = $("#addressRec").val();
@@ -234,6 +245,29 @@ class Wallet {
             $("#page-main").fadeIn();
         });
     }
+    async passwordValid(password) {
+        if (password) {
+            try {
+                var seed = libs.crypto.decryptSeed(this.seed, String(password));
+                var signer = new Signer();
+                var provider = new ProviderSeed(seed);
+                signer.setProvider(provider);
+                var user = await signer.login();
+                if (this.address == user.address) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 }
 var wallet = new Wallet();
 var activeScreen = "home";
@@ -297,6 +331,20 @@ $("#backFromSettings").on("click", function () {
         $("#screen-home").fadeIn();
     });
 });
+$("#qrButton").on("click", function () {
+    // activeScreen = "qr";
+    // $("#screen-send").fadeOut(function(){
+    //     $("#screen-qr").fadeIn(function() {
+    //         wallet.qrscan();
+    //     });
+    // });
+});
+$("#backFromQR").on("click", function () {
+    activeScreen = "home";
+    $("#screen-qr").fadeOut(function () {
+        $("#screen-home").fadeIn();
+    });
+});
 $("#buttonShowExisting").on("click", function () {
     $("#newAccount").fadeOut(function () {
         $("#existingAccount").fadeIn();
@@ -325,12 +373,25 @@ $("#buttonLogout").on("click", function () {
 $("#buttonSend").on("click", function () {
     wallet.send();
 });
+$("#buttonShowSeed").on("click", function () {
+    wallet.showSeed();
+});
 $("#buttonCopy").on("click", function () {
     var address = $("#address").val();
     copy(String(address));
     $("#pMessage4").fadeIn(function () {
         setTimeout(function () {
             $("#pMessage4").fadeOut();
+        }, 500);
+    });
+});
+$("#buttonSeedCopy").on("click", function () {
+    var seed = $("#seedWords2").val();
+    copy(String(seed));
+    $("#pMessage5").fadeIn(function () {
+        setTimeout(function () {
+            $("#pMessage5").fadeOut();
+            $("#seedWords2").val("");
         }, 500);
     });
 });

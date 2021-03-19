@@ -50614,7 +50614,7 @@ function () {
       var _login = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var p, seed, signer, provider, user, d;
+        var p, pv, seed, d;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -50622,30 +50622,23 @@ function () {
                 p = (0, _jquery.default)("#password1").val();
 
                 if (!p) {
-                  _context.next = 31;
+                  _context.next = 26;
                   break;
                 }
 
-                _context.prev = 2;
+                pv = this.passwordValid(p);
+
+                if (!pv) {
+                  _context.next = 22;
+                  break;
+                }
+
+                _context.prev = 4;
                 seed = _wavesTransactions.libs.crypto.decryptSeed(this.seed, String(p));
-                signer = new _signer.Signer();
-                provider = new _providerSeed.ProviderSeed(seed);
-                signer.setProvider(provider);
-                _context.next = 9;
-                return signer.login();
-
-              case 9:
-                user = _context.sent;
-
-                if (!(this.address == user.address)) {
-                  _context.next = 21;
-                  break;
-                }
-
-                _context.next = 13;
+                _context.next = 8;
                 return this.initWaves(seed);
 
-              case 13:
+              case 8:
                 d = new Date();
                 d.setHours(d.getHours() + 1);
                 this.sessionSeed = _wavesTransactions.libs.crypto.encryptSeed(String(seed), this.address);
@@ -50656,37 +50649,37 @@ function () {
 
                 this.populateData();
                 this.showHomeAfterLogin();
-                _context.next = 23;
+                _context.next = 20;
                 break;
 
-              case 21:
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](4);
                 (0, _jquery.default)("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
                 (0, _jquery.default)("#pMessage3").fadeIn();
 
-              case 23:
-                _context.next = 29;
+              case 20:
+                _context.next = 24;
                 break;
 
-              case 25:
-                _context.prev = 25;
-                _context.t0 = _context["catch"](2);
+              case 22:
                 (0, _jquery.default)("#pMessage3").html("Lozinka je pogrešna, pokušajte ponovo.");
                 (0, _jquery.default)("#pMessage3").fadeIn();
 
-              case 29:
-                _context.next = 33;
+              case 24:
+                _context.next = 28;
                 break;
 
-              case 31:
+              case 26:
                 (0, _jquery.default)("#pMessage3").html("Lozinka je obavezna.");
                 (0, _jquery.default)("#pMessage3").fadeIn();
 
-              case 33:
+              case 28:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[2, 25]]);
+        }, _callee, this, [[4, 16]]);
       }));
 
       function login() {
@@ -50707,27 +50700,70 @@ function () {
       });
     }
   }, {
+    key: "qrscan",
+    value: function qrscan() {}
+  }, {
+    key: "showSeed",
+    value: function () {
+      var _showSeed = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var p, pv, seed;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                p = (0, _jquery.default)("#password8").val();
+                _context2.next = 3;
+                return this.passwordValid(p);
+
+              case 3:
+                pv = _context2.sent;
+
+                if (pv) {
+                  seed = _wavesTransactions.libs.crypto.decryptSeed(this.seed, p);
+                  (0, _jquery.default)("#seedWords2").val(seed);
+                  (0, _jquery.default)("#buttonSeedCopy").prop('disabled', false);
+                } else {
+                  alert("wrong");
+                }
+
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function showSeed() {
+        return _showSeed.apply(this, arguments);
+      }
+
+      return showSeed;
+    }()
+  }, {
     key: "send",
     value: function () {
       var _send = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2() {
+      regeneratorRuntime.mark(function _callee3() {
         var recipient, a, amount;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 recipient = (0, _jquery.default)("#addressRec").val();
                 a = (0, _jquery.default)("#amount").val();
 
                 if (!(a && recipient)) {
-                  _context2.next = 15;
+                  _context3.next = 15;
                   break;
                 }
 
-                _context2.prev = 3;
+                _context3.prev = 3;
                 amount = +a;
-                _context2.next = 7;
+                _context3.next = 7;
                 return this.signer.transfer({
                   amount: Math.floor(amount * AHRKDEC),
                   recipient: recipient,
@@ -50744,14 +50780,14 @@ function () {
                     (0, _jquery.default)("#addressRec").val("");
                   }, 2000);
                 });
-                _context2.next = 13;
+                _context3.next = 13;
                 break;
 
               case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](3);
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](3);
 
-                if (_context2.t0.error == 112) {
+                if (_context3.t0.error == 112) {
                   (0, _jquery.default)("#sendError").html("Nemate dovoljno novca na računu. Naknada iznosi 5 lipa.");
                   (0, _jquery.default)("#sendError").fadeIn(function () {
                     setTimeout(function () {
@@ -50765,11 +50801,11 @@ function () {
                       (0, _jquery.default)("#sendError").fadeOut();
                     }, 2000);
                   });
-                  console.log(_context2.t0.message);
+                  console.log(_context3.t0.message);
                 }
 
               case 13:
-                _context2.next = 17;
+                _context3.next = 17;
                 break;
 
               case 15:
@@ -50782,10 +50818,10 @@ function () {
 
               case 17:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this, [[3, 10]]);
+        }, _callee3, this, [[3, 10]]);
       }));
 
       function send() {
@@ -50799,19 +50835,19 @@ function () {
     value: function () {
       var _register = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3() {
+      regeneratorRuntime.mark(function _callee4() {
         var seed, p;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 if (!passwordsEqual("password2", "password3", "pMessage1")) {
-                  _context3.next = 9;
+                  _context4.next = 9;
                   break;
                 }
 
                 seed = _wavesTransactions.libs.crypto.randomSeed();
-                _context3.next = 4;
+                _context4.next = 4;
                 return this.initWaves(seed);
 
               case 4:
@@ -50823,10 +50859,10 @@ function () {
 
               case 9:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
 
       function register() {
@@ -50840,25 +50876,25 @@ function () {
     value: function () {
       var _import2 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4() {
+      regeneratorRuntime.mark(function _callee5() {
         var seed, p;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 if (!passwordsEqual("password4", "password5", "pMessage2")) {
-                  _context4.next = 14;
+                  _context5.next = 14;
                   break;
                 }
 
                 seed = (0, _jquery.default)("#seedWords1").val();
 
                 if (!seed) {
-                  _context4.next = 12;
+                  _context5.next = 12;
                   break;
                 }
 
-                _context4.next = 5;
+                _context5.next = 5;
                 return this.initWaves(seed);
 
               case 5:
@@ -50867,7 +50903,7 @@ function () {
                 this.setCookies();
                 this.populateData();
                 this.showHomeAfterRegister();
-                _context4.next = 14;
+                _context5.next = 14;
                 break;
 
               case 12:
@@ -50876,10 +50912,10 @@ function () {
 
               case 14:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
 
       function _import() {
@@ -50893,17 +50929,17 @@ function () {
     value: function () {
       var _populateBalance = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5() {
+      regeneratorRuntime.mark(function _callee6() {
         var balances;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context5.next = 2;
+                _context6.next = 2;
                 return this.signer.getBalance();
 
               case 2:
-                balances = _context5.sent;
+                balances = _context6.sent;
                 balances.forEach(function (asset) {
                   if (asset.assetId == AHRK) {
                     var balance = asset.amount / AHRKDEC;
@@ -50914,10 +50950,10 @@ function () {
 
               case 4:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function populateBalance() {
@@ -50938,27 +50974,27 @@ function () {
     value: function () {
       var _initWaves = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6(seed) {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      regeneratorRuntime.mark(function _callee7(seed) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 this.signer = new _signer.Signer();
                 this.provider = new _providerSeed.ProviderSeed(seed);
                 this.signer.setProvider(this.provider);
-                _context6.next = 5;
+                _context7.next = 5;
                 return this.signer.login();
 
               case 5:
-                this.user = _context6.sent;
+                this.user = _context7.sent;
                 this.address = this.user.address;
 
               case 7:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee7, this);
       }));
 
       function initWaves(_x) {
@@ -51003,26 +51039,26 @@ function () {
     value: function () {
       var _populateData = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee8() {
+      regeneratorRuntime.mark(function _callee9() {
         var seed;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
                 (0, _jquery.default)("#address").val(this.address);
                 this.generateQR();
 
                 if (this.signer) {
-                  _context8.next = 6;
+                  _context9.next = 6;
                   break;
                 }
 
                 seed = this.decryptSeedSession();
-                _context8.next = 6;
+                _context9.next = 6;
                 return this.initWaves(seed);
 
               case 6:
-                _context8.next = 8;
+                _context9.next = 8;
                 return wallet.populateBalance();
 
               case 8:
@@ -51030,37 +51066,37 @@ function () {
                 /*#__PURE__*/
                 _asyncToGenerator(
                 /*#__PURE__*/
-                regeneratorRuntime.mark(function _callee7() {
-                  return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                regeneratorRuntime.mark(function _callee8() {
+                  return regeneratorRuntime.wrap(function _callee8$(_context8) {
                     while (1) {
-                      switch (_context7.prev = _context7.next) {
+                      switch (_context8.prev = _context8.next) {
                         case 0:
-                          _context7.prev = 0;
-                          _context7.next = 3;
+                          _context8.prev = 0;
+                          _context8.next = 3;
                           return wallet.populateBalance();
 
                         case 3:
-                          _context7.next = 7;
+                          _context8.next = 7;
                           break;
 
                         case 5:
-                          _context7.prev = 5;
-                          _context7.t0 = _context7["catch"](0);
+                          _context8.prev = 5;
+                          _context8.t0 = _context8["catch"](0);
 
                         case 7:
                         case "end":
-                          return _context7.stop();
+                          return _context8.stop();
                       }
                     }
-                  }, _callee7, null, [[0, 5]]);
+                  }, _callee8, null, [[0, 5]]);
                 })), 30000);
 
               case 9:
               case "end":
-                return _context8.stop();
+                return _context9.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee9, this);
       }));
 
       function populateData() {
@@ -51117,6 +51153,73 @@ function () {
         (0, _jquery.default)("#page-main").fadeIn();
       });
     }
+  }, {
+    key: "passwordValid",
+    value: function () {
+      var _passwordValid = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee10(password) {
+        var seed, signer, provider, user;
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                if (!password) {
+                  _context10.next = 21;
+                  break;
+                }
+
+                _context10.prev = 1;
+                seed = _wavesTransactions.libs.crypto.decryptSeed(this.seed, String(password));
+                signer = new _signer.Signer();
+                provider = new _providerSeed.ProviderSeed(seed);
+                signer.setProvider(provider);
+                _context10.next = 8;
+                return signer.login();
+
+              case 8:
+                user = _context10.sent;
+
+                if (!(this.address == user.address)) {
+                  _context10.next = 13;
+                  break;
+                }
+
+                return _context10.abrupt("return", true);
+
+              case 13:
+                return _context10.abrupt("return", false);
+
+              case 14:
+                _context10.next = 19;
+                break;
+
+              case 16:
+                _context10.prev = 16;
+                _context10.t0 = _context10["catch"](1);
+                return _context10.abrupt("return", false);
+
+              case 19:
+                _context10.next = 22;
+                break;
+
+              case 21:
+                return _context10.abrupt("return", false);
+
+              case 22:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10, this, [[1, 16]]);
+      }));
+
+      function passwordValid(_x2) {
+        return _passwordValid.apply(this, arguments);
+      }
+
+      return passwordValid;
+    }()
   }]);
 
   return Wallet;
@@ -51183,6 +51286,19 @@ var page = wallet.getPage(); // Button bindings
     (0, _jquery.default)("#screen-home").fadeIn();
   });
 });
+(0, _jquery.default)("#qrButton").on("click", function () {// activeScreen = "qr";
+  // $("#screen-send").fadeOut(function(){
+  //     $("#screen-qr").fadeIn(function() {
+  //         wallet.qrscan();
+  //     });
+  // });
+});
+(0, _jquery.default)("#backFromQR").on("click", function () {
+  activeScreen = "home";
+  (0, _jquery.default)("#screen-qr").fadeOut(function () {
+    (0, _jquery.default)("#screen-home").fadeIn();
+  });
+});
 (0, _jquery.default)("#buttonShowExisting").on("click", function () {
   (0, _jquery.default)("#newAccount").fadeOut(function () {
     (0, _jquery.default)("#existingAccount").fadeIn();
@@ -51211,12 +51327,25 @@ var page = wallet.getPage(); // Button bindings
 (0, _jquery.default)("#buttonSend").on("click", function () {
   wallet.send();
 });
+(0, _jquery.default)("#buttonShowSeed").on("click", function () {
+  wallet.showSeed();
+});
 (0, _jquery.default)("#buttonCopy").on("click", function () {
   var address = (0, _jquery.default)("#address").val();
   (0, _copyToClipboard.default)(String(address));
   (0, _jquery.default)("#pMessage4").fadeIn(function () {
     setTimeout(function () {
       (0, _jquery.default)("#pMessage4").fadeOut();
+    }, 500);
+  });
+});
+(0, _jquery.default)("#buttonSeedCopy").on("click", function () {
+  var seed = (0, _jquery.default)("#seedWords2").val();
+  (0, _copyToClipboard.default)(String(seed));
+  (0, _jquery.default)("#pMessage5").fadeIn(function () {
+    setTimeout(function () {
+      (0, _jquery.default)("#pMessage5").fadeOut();
+      (0, _jquery.default)("#seedWords2").val("");
     }, 500);
   });
 });
@@ -51272,7 +51401,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40871" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44837" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
