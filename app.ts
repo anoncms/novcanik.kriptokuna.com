@@ -204,6 +204,7 @@ class Wallet {
 
     updateAmount() {
         var currency = $("#sendCurrency").val();
+        console.log(currency);
         var amount = 0;
         var dp = this.getDecimalPlaces(String(currency));
         var decimalPlaces = 0;
@@ -230,7 +231,45 @@ class Wallet {
         if (balance < 0) {
             balance = 0;
         }
+        console.log(amount);
+        console.log(this.getFee(String(currency)));
         $("#amount").val(String(balance.toFixed(decimalPlaces)));
+    }
+
+    updateFeeAmount() {
+        var currency = $("#sendCurrency").val();
+        var dp = this.getDecimalPlaces(String(currency));
+        var decimalPlaces = 0;
+        if (currency == AHRK) {
+            $("#feeAsset").html("AHRK");
+            decimalPlaces = 6;
+        } else if (currency == AEUR) {
+            $("#feeAsset").html("AEUR");
+            decimalPlaces = 2;
+        } else if (currency == "") {
+            $("#feeAsset").html("WAVES");
+            decimalPlaces = 8;
+        } else if (currency == AINT) {
+            if (t.lang == "hr") {
+                $("#feeAsset").html("AHRK");
+                decimalPlaces = 6;
+                dp = this.getDecimalPlaces(AHRK);
+            } else if (t.lang == "en") {
+                $("#feeAsset").html("AEUR");
+                decimalPlaces = 2;
+                dp = this.getDecimalPlaces(AEUR);
+            }
+        } else if (currency == ANOTE) {
+            $("#feeAsset").html("ANOTE");
+            decimalPlaces = 8;
+        }
+
+        var fee = this.getFee(String(currency));
+        var feeStr = fee / dp;
+
+        console.log(feeStr);
+
+        $("#feePrice").html(String(feeStr.toFixed(decimalPlaces)));
     }
 
     async changePassword() {
@@ -386,7 +425,7 @@ class Wallet {
                     $("#balance").html(String(balance.toFixed(2)));
                 }
             } else if (asset.assetId == AEUR) {
-                wallet.balanceAeur = asset.amount / 100;
+                wallet.balanceAeur = asset.amount;
                 if (t.lang == "en") {
                     var balance = Math.round(wallet.balanceAeur * 100) / 100;
                     $("#balance").html(String(balance.toFixed(2)));
@@ -742,6 +781,7 @@ $("#buttonCollect").on( "click", function() {
 
 $("#sendCurrency").on( "change", function() {
     wallet.updateAmount();
+    wallet.updateFeeAmount();
 });
 
 $("#buttonCollectEarnings").on( "click", function() {
