@@ -15,11 +15,16 @@ class Wallet {
     private signer;
     private provider;
     private seedSaved;
+
     balanceWaves:number;
     balanceAhrk:number;
     balanceAeur:number;
     balanceAnote:number;
     balanceAint:number;
+
+    earningsWaves:number;
+    earningsAhrk:number;
+    earningsAeur:number;
 
     constructor() { 
         this.address = Cookies.get("address");
@@ -32,13 +37,17 @@ class Wallet {
         this.balanceAeur = 0;
         this.balanceAnote = 0;
         this.balanceAint = 0;
+
+        this.earningsWaves = 0;
+        this.earningsAhrk = 0;
+        this.earningsAeur = 0;
     }
 
     getPage():string {
         this.checkSeedWarning();
         if (this.isLoggedIn()) {
             this.populateData();
-            this.getInterestScript();
+            this.getEarningsScript();
             return "main";
         } else {
             if (this.accountExists()) {
@@ -59,14 +68,26 @@ class Wallet {
         }
     }
 
-    getInterestScript() {
+    getEarningsScript() {
         var newScript = document.createElement("script");
-        newScript.src = interestScript + "/" + this.getAddress() + "/interest.js";
-        document.body.appendChild(newScript);
+        newScript.onload = function() {
+            console.log($("#earningsWaves").val());
 
-        var newScript1 = document.createElement("script");
-        newScript1.src = earningsScript + "/" + this.getAddress() + "/earnings.js";
-        document.body.appendChild(newScript1);
+            wallet.earningsWaves = parseInt(String($("#earningsWaves").val()));
+            wallet.earningsAhrk = parseInt(String($("#earningsAhrk").val()));
+            wallet.earningsAeur = parseInt(String($("#earningsAeur").val()));
+    
+            $("#accumulatedEarningsAint").html(String((wallet.earningsWaves / SATINBTC).toFixed(8)));
+
+            if (t.lang == "en") {
+                $("#accumulatedEarningsMain").html(String((wallet.earningsAeur / 100).toFixed(2)));
+            } else if (t.lang == "hr") {
+                $("#accumulatedEarningsMain").html(String((wallet.earningsAhrk / AHRKDEC).toFixed(6)));
+            }
+        }
+        newScript.async = false;
+        newScript.src = earningsScript + "/" + this.getAddress() + "/earnings.js";
+        document.body.appendChild(newScript);
     }
 
     // async exchange(id, address) {
@@ -113,7 +134,7 @@ class Wallet {
     //     }
     // }
 
-    async collectInterest(address:string) {
+    async collectEarnings(address:string) {
         try {
             await this.signer.transfer({
                 amount: 950000,
@@ -129,7 +150,7 @@ class Wallet {
                         setTimeout(function(){
                             $("#pMessage10").fadeOut(function() {
                                 $("#pMessage9").fadeIn();
-                                $("#accumulatedInerest").html("0.000000")
+                                $("#accumulatedEarningsMain").html("0.000000")
                             });
                         }, 2000);
                     });
@@ -140,7 +161,7 @@ class Wallet {
                         setTimeout(function(){
                             $("#pMessage12").fadeOut(function() {
                                 $("#pMessage11").fadeIn();
-                                $("#accumulatedEarnings").html("0.0000")
+                                $("#accumulatedEarningsAint").html("0.0000")
                             });
                         }, 2000);
                     });
@@ -148,7 +169,7 @@ class Wallet {
             }
         } catch (error) {
             if (error.error == 112) {
-                $("#pMessage9").html(t.collectAHRK.notEnough);
+                $("#pMessage9").html(t.collectEarnings.notEnough);
             } else {
                 $("#pMessage9").html(t.error);
                 console.log(error);
@@ -170,7 +191,7 @@ class Wallet {
                     Cookies.set("sessionSeed", this.sessionSeed, { expires: d });
                     this.populateData();
                     this.showHomeAfterLogin();
-                    this.getInterestScript();
+                    this.getEarningsScript();
                 } catch (e) {
                     $("#pMessage3").html(t.login.wrongPass);
                     $("#pMessage3").fadeIn();
@@ -204,7 +225,7 @@ class Wallet {
 
     updateAmount() {
         var currency = $("#sendCurrency").val();
-        console.log(currency);
+
         var amount = 0;
         var dp = this.getDecimalPlaces(String(currency));
         var decimalPlaces = 0;
@@ -231,8 +252,7 @@ class Wallet {
         if (balance < 0) {
             balance = 0;
         }
-        console.log(amount);
-        console.log(this.getFee(String(currency)));
+
         $("#amount").val(String(balance.toFixed(decimalPlaces)));
     }
 
@@ -266,8 +286,6 @@ class Wallet {
 
         var fee = this.getFee(String(currency));
         var feeStr = fee / dp;
-
-        console.log(feeStr);
 
         $("#feePrice").html(String(feeStr.toFixed(decimalPlaces)));
     }
@@ -392,7 +410,7 @@ class Wallet {
             this.setCookies();
             this.populateData();
             this.showHomeAfterRegister();
-            this.getInterestScript();
+            this.getEarningsScript();
         }
     }
 
@@ -406,7 +424,7 @@ class Wallet {
                 this.setCookies();
                 this.populateData();
                 this.showHomeAfterRegister();
-                this.getInterestScript();
+                this.getEarningsScript();
             } else {
                 $("#pMessage2").html(t.import.seedRequired);
                 $("#pMessage2").fadeIn();
@@ -427,7 +445,7 @@ class Wallet {
             } else if (asset.assetId == AEUR) {
                 wallet.balanceAeur = asset.amount;
                 if (t.lang == "en") {
-                    var balance = Math.round(wallet.balanceAeur * 100) / 100;
+                    var balance = Math.round(wallet.balanceAeur) / 100;
                     $("#balance").html(String(balance.toFixed(2)));
                 }
             } else if (asset.assetId == "WAVES") {
@@ -597,8 +615,8 @@ const AHRKADDRESS = "3PPc3AP75DzoL8neS4e53tZ7ybUAVxk2jAb";
 const AINTADDRESS = "3PBmmxKhFcDhb8PrDdCdvw2iGMPnp7VuwPy"
 
 var activeScreen = "home";
-var interestScript = "https://n.kriptokuna.com";
-var earningsScript = "https://aint.anonutopia.com";
+// var earningsScript = "https://aint.anonutopia.com";
+var earningsScript = "https://ca0d82c86a33.ngrok.io";
 var t;
 
 const wallet = new Wallet();
@@ -776,7 +794,7 @@ $("#buttonChangePass").on( "click", function() {
 });
 
 $("#buttonCollect").on( "click", function() {
-    wallet.collectInterest(AHRKADDRESS);
+    wallet.collectEarnings(AHRKADDRESS);
 });
 
 $("#sendCurrency").on( "change", function() {
@@ -785,7 +803,7 @@ $("#sendCurrency").on( "change", function() {
 });
 
 $("#buttonCollectEarnings").on( "click", function() {
-    wallet.collectInterest(AINTADDRESS);
+    wallet.collectEarnings(AINTADDRESS);
 });
 
 $("#buttonCopy").on( "click", function() {
