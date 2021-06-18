@@ -84,7 +84,8 @@ class Wallet {
             }
         }
         newScript.async = false;
-        newScript.src = earningsScript + "/" + this.getAddress() + "/earnings.js";
+        var stamp = new Date().getTime();
+        newScript.src = earningsScript + "/" + this.getAddress() + "/earnings.js?stamp=" + stamp;
         document.body.appendChild(newScript);
     }
 
