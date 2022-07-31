@@ -403,9 +403,6 @@ class Wallet {
 
     async send() {
         var currency = $("#sendCurrency").val();
-        if (currency == "") {
-            currency = undefined;
-        }
         var decimalPlaces = this.getDecimalPlaces(String(currency));
         var fee = this.getFee(String(currency));
         var feeCurrency = currency;
@@ -472,6 +469,9 @@ class Wallet {
 
     async exchange() {
         var from = $("#fromCurrency").val();
+        if (from == "") {
+            from = undefined;
+        }
         var to = $("#toCurrency").val();
         var decimalPlaces = this.getDecimalPlaces(String(from));
         var fee = this.getFee(String(from));
